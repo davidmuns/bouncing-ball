@@ -3,172 +3,181 @@
  * For further information please click on Smiley button ----------------------->>>
  * Thanks for visiting!
  ***************************************/
-// Cloud constructor that receives location parameters
-let Cloud = function (x, y) {
-    this.position = new p5.Vector(x, y);
-    this.vel = new p5.Vector(-0.8, 0);
-};
-// Class method that displays a cloud
-Cloud.prototype.display = function () {
-    fill(255);
-    noStroke();
-    ellipse(this.position.x - 31, this.position.y, 60, 60);
-    ellipse(this.position.x + 31, this.position.y, 60, 60);
-    ellipse(this.position.x, this.position.y, 80, 80);
-};
-// Class method that moves the cloud
-Cloud.prototype.move = function () {
-    this.position.add(this.vel);
-    if (this.position.x < - 60) { this.position.x = width + 60; }
-};
-// Button constructor that receives location parameters
-let Button = function (x, y) {
-    this.position = new p5.Vector(x, y);
-    this.ancho = 62;
-    this.alto = 62;
-    this.mouseInside = false;
-};
-// Class method that receives both location and size parameters
-Button.prototype.draw = function (texto, x, y, s) {
-    fill(125, 115, 115);
-    if (this.mouseInside) {
-        fill(7, 224, 7);
+
+class Cloud {
+    // Cloud constructor that receives location parameters
+    constructor(x, y) {
+        this.position = new p5.Vector(x, y);
+        this.vel = new p5.Vector(-0.8, 0);
     }
-    strokeWeight(3);
-    stroke(35, 232, 14);
-    rectMode(CENTER);
-    rect(this.position.x, this.position.y, this.ancho, this.alto, 10);
-    fill(255, 255, 255);
-    textSize(s);
-    rectMode(CENTER);
-    text(texto, x, y, 50, 75);
-};
-// Class method that receives mouse position as a location parameters
-Button.prototype.checkMouseInButton = function (mx, my) {
-    let distance = dist(mx, my, this.position.x, this.position.y);
-    if (distance < this.alto / 2) {
-        this.mouseInside = true;
+    // Class method that displays a cloud
+    display() {
+        fill(255);
+        noStroke();
+        ellipse(this.position.x - 31, this.position.y, 60, 60);
+        ellipse(this.position.x + 31, this.position.y, 60, 60);
+        ellipse(this.position.x, this.position.y, 80, 80);
     }
-};
-// Class method that checks if mouse is clicked and if so returns a boolean value
-Button.prototype.mouseIsClicked = function () {
-    return this.mouseInside;
-};
-// Class method that checks if mouse has been released
-Button.prototype.mouseNotClicked = function () {
-    this.mouseInside = false;
-};
-// Smiley constructor that receives both mass an location parameters
-let Smiley = function (m, x, y) {
-    this.mass = m;
-    this.position = new p5.Vector(x, y);
-    this.speed = new p5.Vector(0, 0);
-    this.acc = new p5.Vector(0, 0);
-    this.size = random(30, 70);
-    this.mouseInside = false;
-};
-Smiley.prototype.mouseInSmiley = function (mx, my) {
-    let distance = dist(mx, my, this.position.x, this.position.y);
-    if (distance < this.size / 2) { this.mouseInside = true; }
-};
-Smiley.prototype.dragSmiley = function (mx, my) {
-    if (this.mouseInside) {
-        this.position.x = mx;
-        this.position.y = my;
-        this.speed.mult(0);
+    // Class method that moves the cloud
+    move() {
+        this.position.add(this.vel);
+        if (this.position.x < -60) { this.position.x = width + 60; }
     }
-};
-Smiley.prototype.releaseSmiley = function () {
-    this.mouseInside = false;
-};
-// Class method that moves the Smiley according to the forces it is receiving.
-Smiley.prototype.motion = function (force) {
-    let f = p5.Vector.div(force, this.mass);
-    this.acc.add(f);
-    this.speed.add(this.acc);
-    this.position.add(this.speed);
-    this.acc.mult(0);
-};
-// Class method that displays a Smiley and receives an string parameter
-Smiley.prototype.display = function (texto) {
-    let angle = map(this.position.x, 0, width, 0, 50);
-    let offSetTextoY = 9;
-    textSize(this.size / 2);
-    fill(10, 1, 69); // Text color
-    text(texto, (this.position.x) - (this.size / 2) - this.size - texto.length,
-        (this.position.y) - (this.size / 2) - offSetTextoY);
-    fill(255, 255, 0, 200); // Face color
-    if (this.mouseInside) { fill(255, 0, 0); } // Face color if mouse on face and mouse                                              // is pressed
-    strokeWeight(2);
-    stroke(0);
-    if (this.mouseInside) {
-        ellipse(this.position.x, this.position.y, this.size, this.size); // Face
-        fill(0, 0, 0); // Eyes color
-        ellipse(this.position.x - this.size / 7, this.position.y - this.size / 6,
-            this.size / 10, this.size / 6); // Left eye
-        ellipse(this.position.x + this.size / 7, this.position.y - this.size / 6,
-            this.size / 10, this.size / 6); // Right eye
+}
+
+class Button {
+    // Button constructor that receives location parameters
+    constructor(x, y) {
+        this.position = new p5.Vector(x, y);
+        this.ancho = 62;
+        this.alto = 62;
+        this.mouseInside = false;
+    }
+    // Class method that receives both location and size parameters
+    draw(texto, x, y, s) {
+        fill(125, 115, 115);
         if (this.mouseInside) {
-            fill(0); // Mouth color
-            stroke(10);
-            ellipse(this.position.x, this.position.y + this.size / 3.5,
-                this.size / 3, this.size / 3); // Mouse is pressed mouth
-        } else {
-            arc(this.position.x, this.position.y,
-                this.size / 1.5, this.size / 1.5, 0, 180); // Smiling Mouth
+            fill(7, 224, 7);
         }
-    } else {
-        push();
-        translate(this.position.x, this.position.y);
-        rotate(angle);
-        ellipse(0, 0, this.size, this.size); // Face
-        fill(0, 0, 0); // Eyes color
-        ellipse(0 - this.size / 7, 0 - this.size / 6,
-            this.size / 10, this.size / 6); // Left eye
-        ellipse(this.size / 7, - this.size / 6,
-            this.size / 10, this.size / 6); // Right eye
-        noFill();
+        strokeWeight(3);
+        stroke(35, 232, 14);
+        rectMode(CENTER);
+        rect(this.position.x, this.position.y, this.ancho, this.alto, 10);
+        fill(255, 255, 255);
+        textSize(s);
+        rectMode(CENTER);
+        text(texto, x, y, 50, 75);
+    }
+    // Class method that receives mouse position as a location parameters
+    checkMouseInButton(mx, my) {
+        let distance = dist(mx, my, this.position.x, this.position.y);
+        if (distance < this.alto / 2) {
+            this.mouseInside = true;
+        }
+    }
+    // Class method that checks if mouse is clicked and if so returns a boolean value
+    mouseIsClicked() {
+        return this.mouseInside;
+    }
+    // Class method that checks if mouse has been released
+    mouseNotClicked() {
+        this.mouseInside = false;
+    }
+}
+
+class Smiley {
+    // Smiley constructor that receives both mass an location parameters
+    constructor(m, x, y) {
+        this.mass = m;
+        this.position = new p5.Vector(x, y);
+        this.speed = new p5.Vector(0, 0);
+        this.acc = new p5.Vector(0, 0);
+        this.size = random(30, 70);
+        this.mouseInside = false;
+    }
+    mouseInSmiley(mx, my) {
+        let distance = dist(mx, my, this.position.x, this.position.y);
+        if (distance < this.size / 2) { this.mouseInside = true; }
+    }
+    dragSmiley(mx, my) {
         if (this.mouseInside) {
-            fill(0); // Mouth color
-            stroke(10);
-            ellipse(0, this.size / 3.5,
-                this.size / 3, this.size / 3); // Mouse is pressed mouth
-        } else {
-            arc(0, 0, this.size / 1.5, this.size / 1.5, 0, PI); // Smiling Mouth
+            this.position.x = mx;
+            this.position.y = my;
+            this.speed.mult(0);
         }
-        pop();
     }
-};
-// Class method that limits the Smiley bouncing within the area of the canvas 
-Smiley.prototype.checkEdges = function () {
-    if (this.position.x > width - this.size / 2) {
-        this.speed.x *= -1;
-        this.position.x = width - this.size / 2;
+    releaseSmiley() {
+        this.mouseInside = false;
     }
-    if (this.position.x < 0 + this.size / 2) {
-        this.speed.x *= -1;
-        this.position.x = 0 + this.size / 2;
+    // Class method that moves the Smiley according to the forces it is receiving.
+    motion(force) {
+        let f = p5.Vector.div(force, this.mass);
+        this.acc.add(f);
+        this.speed.add(this.acc);
+        this.position.add(this.speed);
+        this.acc.mult(0);
     }
-    if (this.position.y > height - this.size / 2) {
-        this.speed.y *= -1;
-        this.position.y = height - this.size / 2;
+    // Class method that displays a Smiley and receives an string parameter
+    display(texto) {
+        let angle = map(this.position.x, 0, width, 0, 50);
+        let offSetTextoY = 9;
+        textSize(this.size / 2);
+        fill(10, 1, 69); // Text color
+        text(texto, (this.position.x) - (this.size / 2) - this.size - texto.length,
+            (this.position.y) - (this.size / 2) - offSetTextoY);
+        fill(255, 255, 0, 200); // Face color
+        if (this.mouseInside) { fill(255, 0, 0); } // Face color if mouse on face and mouse                                              // is pressed
+        strokeWeight(2);
+        stroke(0);
+        if (this.mouseInside) {
+            ellipse(this.position.x, this.position.y, this.size, this.size); // Face
+            fill(0, 0, 0); // Eyes color
+            ellipse(this.position.x - this.size / 7, this.position.y - this.size / 6,
+                this.size / 10, this.size / 6); // Left eye
+            ellipse(this.position.x + this.size / 7, this.position.y - this.size / 6,
+                this.size / 10, this.size / 6); // Right eye
+            if (this.mouseInside) {
+                fill(0); // Mouth color
+                stroke(10);
+                ellipse(this.position.x, this.position.y + this.size / 3.5,
+                    this.size / 3, this.size / 3); // Mouse is pressed mouth
+            } else {
+                arc(this.position.x, this.position.y,
+                    this.size / 1.5, this.size / 1.5, 0, 180); // Smiling Mouth
+            }
+        } else {
+            push();
+            translate(this.position.x, this.position.y);
+            rotate(angle);
+            ellipse(0, 0, this.size, this.size); // Face
+            fill(0, 0, 0); // Eyes color
+            ellipse(0 - this.size / 7, 0 - this.size / 6,
+                this.size / 10, this.size / 6); // Left eye
+            ellipse(this.size / 7, -this.size / 6,
+                this.size / 10, this.size / 6); // Right eye
+            noFill();
+            if (this.mouseInside) {
+                fill(0); // Mouth color
+                stroke(10);
+                ellipse(0, this.size / 3.5,
+                    this.size / 3, this.size / 3); // Mouse is pressed mouth
+            } else {
+                arc(0, 0, this.size / 1.5, this.size / 1.5, 0, PI); // Smiling Mouth
+            }
+            pop();
+        }
     }
-    if (this.position.y < 0 + this.size / 2) {
-        this.speed.y *= -1;
-        this.position.y = 0 + this.size / 2;
+    // Class method that limits the Smiley bouncing within the area of the canvas 
+    checkEdges() {
+        if (this.position.x > width - this.size / 2) {
+            this.speed.x *= -1;
+            this.position.x = width - this.size / 2;
+        }
+        if (this.position.x < 0 + this.size / 2) {
+            this.speed.x *= -1;
+            this.position.x = 0 + this.size / 2;
+        }
+        if (this.position.y > height - this.size / 2) {
+            this.speed.y *= -1;
+            this.position.y = height - this.size / 2;
+        }
+        if (this.position.y < 0 + this.size / 2) {
+            this.speed.y *= -1;
+            this.position.y = 0 + this.size / 2;
+        }
     }
-};
+}
 // Main
-let cloud = [];
-let buttonSmiley = new Button(360, 40);
-let buttonReset = new Button(360, 110);
-let smiley = [];
-let info = [" Looking for a...", "...Fullstack Developer?", "  Contact me!", " David G Muns", "davidmuns@yahoo.es", "Thanks for visiting"];
-let nSmilies = 0;
-let risingEdge = false;
-let risingEdge2 = false;
-let fWind = 0.005; // Wind force value
-let fGravity = 0.1; // Gravity force value
+let cloud;
+let buttonSmiley;
+let buttonReset;
+let smiley;
+let info;
+let nSmilies;
+let risingEdge;
+let risingEdge2;
+let fWind;
+let fGravity;
 
 // Blinking function
 let blinking = function (time) {
@@ -177,6 +186,16 @@ let blinking = function (time) {
 };
 
 function setup() {
+    cloud = [];
+    buttonSmiley = new Button(360, 40);
+    buttonReset = new Button(360, 110);
+    smiley = [];
+    info = [" Looking for a...", "...Fullstack Developer?", "  Contact me!", " David G Muns", "davidmuns@yahoo.es", "Thanks for visiting"];
+    nSmilies = 0;
+    risingEdge = false;
+    risingEdge2 = false;
+    fWind = 0.005; // Wind force value
+    fGravity = 0.1; // Gravity force value
     // createCanvas(windowWidth, windowHeight);
     createCanvas(900, 400);
     for (let i = 0; i < 30; i++) { // Initialize array of clouds
