@@ -106,7 +106,7 @@ class Smiley {
         text(texto, (this.position.x) - (this.size / 2) - this.size - texto.length,
             (this.position.y) - (this.size / 2) - offSetTextoY);
         fill(255, 255, 0, 200); // Face color
-        if (this.mouseInside) { fill(255, 0, 0); } // Face color if mouse on face and mouse                                              // is pressed
+        if (this.mouseInside) { fill(255, 0, 0); } // Face color if mouse on face and mouse is pressed
         strokeWeight(2);
         stroke(0);
         if (this.mouseInside) {
@@ -197,7 +197,7 @@ function setup() {
     fWind = 0.005; // Wind force value
     fGravity = 0.1; // Gravity force value
     // createCanvas(windowWidth, windowHeight);
-    createCanvas(900, 400);
+    createCanvas(970, 450);
     for (let i = 0; i < 30; i++) { // Initialize array of clouds
         cloud[i] = new Cloud(random(0, 400) + 50, random(50, 350) + 10);
     }
@@ -287,7 +287,7 @@ function draw() {
         text("Game over", 130, 200);
     }
     buttonSmiley.draw("Smiley", 362, 70, 15);
-    buttonReset.draw("Start", 367, 140, 15);
+    buttonReset.draw("Reset", 365, 140, 15);
 };
 mousePressed = function () {
     buttonReset.checkMouseInButton(mouseX, mouseY);
