@@ -196,8 +196,8 @@ function setup() {
     risingEdge2 = false;
     fWind = 0.005; // Wind force value
     fGravity = 0.1; // Gravity force value
-    // createCanvas(windowWidth, windowHeight);
-    createCanvas(970, 450);
+    createCanvas(windowWidth, windowHeight);
+    // createCanvas(970, 450);
     for (let i = 0; i < 30; i++) { // Initialize array of clouds
         cloud[i] = new Cloud(random(0, 400) + 50, random(50, 350) + 10);
     }
@@ -205,9 +205,9 @@ function setup() {
 // frameRate(30);
 function draw() {
     background(144, 211, 245);
-    for (let i = 0; i < cloud.length; i++) {
-        cloud[i].display();
-        cloud[i].move();
+    for (const element of cloud) {
+        element.display();
+        element.move();
     }
 
     // Reset program and score if reset button is pressed
@@ -292,17 +292,17 @@ function draw() {
 mousePressed = function () {
     buttonReset.checkMouseInButton(mouseX, mouseY);
     buttonSmiley.checkMouseInButton(mouseX, mouseY);
-    for (let i = 0; i < smiley.length; i++) {
-        smiley[i].mouseInSmiley(mouseX, mouseY);
+    for (const element of smiley) {
+        element.mouseInSmiley(mouseX, mouseY);
     }
 };
 mouseReleased = function () {
     buttonReset.mouseNotClicked();
     buttonSmiley.mouseNotClicked();
-    for (let i = 0; i < smiley.length; i++) {
-        smiley[i].releaseSmiley(mouseX, mouseY);
+    for (const element of smiley) {
+        element.releaseSmiley(mouseX, mouseY);
     }
 };
-// function windowResized() {
-//     resizeCanvas(windowWidth, windowHeight);
-// };
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+};
